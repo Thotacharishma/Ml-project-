@@ -37,7 +37,7 @@ if uploaded_file is not None:
 
         with col1:
             if st.button("🚀 Train with KNN"):
-                 k_value = st.slider("🔢 Select value of K for KNN", 1, 20, 5
+                 k_value = st.slider("🔢 Select value of K for KNN", 1, 20, 5)
                 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
                 knn = KNeighborsClassifier(n_neighbors=k_value)
                 knn.fit(X_train, y_train)
