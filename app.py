@@ -9,7 +9,7 @@ from sklearn.metrics import accuracy_score, mean_squared_error, mean_absolute_er
 st.set_page_config(page_title="ML Model Type Detector", layout="wide")
 st.title("📊 Auto ML: Classification or Regression")
 
-uploaded_file = st.file_uploader("📁 Uplload your dataset (CSV)", type=["csv"])
+uploaded_file = st.file_uploader("📁 Upload your dataset (CSV)", type=["csv"])
 
 def detect_problem_type(df, target_col):
     unique_vals = df[target_col].nunique()
