@@ -6,37 +6,42 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import accuracy_score
 
 st.set_page_config(page_title="KNN Trainer", layout="wide")
-st.title("📊 Train Your Model with KNN")
+st.title("📊 Train Model using KNN")
 
 # Upload CSV file
-uploaded_file = st.file_uploader("Upload your CSV dataset", type=["csv"])
+uploaded_file = st.file_uploader("📁 Upload your CSV dataset", type=["csv"])
 
 if uploaded_file is not None:
+    # Read dataset
     df = pd.read_csv(uploaded_file)
-    st.subheader("🔍 Preview of Dataset")
+    st.subheader("📄 Preview of Uploaded Data")
     st.dataframe(df.head())
 
-    # Column selection
+    # Let user pick the target column
     columns = df.columns.tolist()
-    target_col = st.selectbox("🎯 Select target column (label)", columns)
+    target_col = st.selectbox("🎯 Select the target column", columns)
 
     if target_col:
-        # Encode categorical features
-        for col in df.select_dtypes(include='object').columns:
-            df[col] = LabelEncoder().fit_transform(df[col])
+        # Slider to choose K
+        k_value = st.slider("🔢 Choose value of K", min_value=1, max_value=20, value=5)
 
-        X = df.drop(target_col, axis=1)
-        y = df[target_col]
+        # Show KNN button after data is uploaded and target is selected
+        if st.button("🚀 Run KNN"):
+            # Label encode if needed
+            for col in df.select_dtypes(include='object').columns:
+                df[col] = LabelEncoder().fit_transform(df[col])
 
-        # Select K value
-        k_value = st.slider("🔢 Select K value for KNN", min_value=1, max_value=20, value=5)
+            X = df.drop(target_col, axis=1)
+            y = df[target_col]
 
-        # Button to train and show accuracy
-        if st.button("Train with KNN"):
+            # Train-test split
             X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+            # KNN model
             knn = KNeighborsClassifier(n_neighbors=k_value)
             knn.fit(X_train, y_train)
             y_pred = knn.predict(X_test)
-            acc = accuracy_score(y_test, y_pred)
 
-            st.success(f"✅ Accuracy of KNN Model: {acc * 100:.2f}%")
+            # Accuracy score
+            acc = accuracy_score(y_test, y_pred)
+            st.success(f"✅ KNN Model Accuracy: {acc * 100:.2f}%")
