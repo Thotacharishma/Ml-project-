@@ -5,12 +5,10 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import accuracy_score, mean_squared_error, mean_absolute_error, r2_score
 from sklearn.neighbors import KNeighborsClassifier, KNeighborsRegressor
 from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
-from sklearn.linear_model import LogisticRegression
-from sklearn.linear_model import LinearRegression
-
+from sklearn.linear_model import LogisticRegression, LinearRegression
 
 st.set_page_config(page_title="ML Classifier or Regressor", layout="wide")
-st.title("🤖 1Auto ML: Classification or Regression Model Trainer")
+st.title("🤖 Auto ML: Classification or Regression Model Trainer")
 
 # Upload CSV
 uploaded_file = st.file_uploader("📁 Upload your dataset (CSV format)", type=["csv"])
@@ -55,61 +53,59 @@ if uploaded_file:
         st.subheader("⚙️ Choose Model")
 
         if problem_type == "classification":
-    knn_clicked = st.button("📌 Calculate KNN Classifier Accuracy")
-    dt_clicked = st.button("🌳 Calculate Decision Tree Classifier Accuracy")
-    lr_clicked = st.button("📈 Calculate Logistic Regression Accuracy")
+            knn_clicked = st.button("📌 Calculate KNN Classifier Accuracy")
+            dt_clicked = st.button("🌳 Calculate Decision Tree Classifier Accuracy")
+            logreg_clicked = st.button("📈 Calculate Logistic Regression Accuracy")
 
-    if knn_clicked:
-        knn = KNeighborsClassifier(n_neighbors=5)
-        knn.fit(X_train, y_train)
-        y_pred = knn.predict(X_test)
-        acc = accuracy_score(y_test, y_pred)
-        st.success(f"✅ KNN Classifier Accuracy: {acc:.2f}")
+            if knn_clicked:
+                knn = KNeighborsClassifier(n_neighbors=5)
+                knn.fit(X_train, y_train)
+                y_pred = knn.predict(X_test)
+                acc = accuracy_score(y_test, y_pred)
+                st.success(f"✅ KNN Classifier Accuracy: {acc:.2f}")
 
-    if dt_clicked:
-        dt = DecisionTreeClassifier(random_state=42)
-        dt.fit(X_train, y_train)
-        y_pred = dt.predict(X_test)
-        acc = accuracy_score(y_test, y_pred)
-        st.success(f"✅ Decision Tree Classifier Accuracy: {acc:.2f}")
+            if dt_clicked:
+                dt = DecisionTreeClassifier(random_state=42)
+                dt.fit(X_train, y_train)
+                y_pred = dt.predict(X_test)
+                acc = accuracy_score(y_test, y_pred)
+                st.success(f"✅ Decision Tree Classifier Accuracy: {acc:.2f}")
 
-    if lr_clicked:
-        lr = LogisticRegression(max_iter=1000)
-        lr.fit(X_train, y_train)
-        y_pred = lr.predict(X_test)
-        acc = accuracy_score(y_test, y_pred)
-        st.success(f"✅ Logistic Regression Accuracy: {acc:.2f}")
-
+            if logreg_clicked:
+                lr = LogisticRegression(max_iter=1000)
+                lr.fit(X_train, y_train)
+                y_pred = lr.predict(X_test)
+                acc = accuracy_score(y_test, y_pred)
+                st.success(f"✅ Logistic Regression Accuracy: {acc:.2f}")
 
         elif problem_type == "regression":
-    knn_reg_clicked = st.button("📌 Calculate KNN Regression Metrics")
-    dt_reg_clicked = st.button("🌳 Calculate Decision Tree Regression Metrics")
-    lr_clicked = st.button("📈 Calculate Linear Regression Metrics")
+            knn_reg_clicked = st.button("📌 Calculate KNN Regression Metrics")
+            dt_reg_clicked = st.button("🌳 Calculate Decision Tree Regression Metrics")
+            linreg_clicked = st.button("📈 Calculate Linear Regression Metrics")
 
-    if knn_reg_clicked:
-        knn = KNeighborsRegressor(n_neighbors=5)
-        knn.fit(X_train, y_train)
-        y_pred = knn.predict(X_test)
-        st.success("✅ KNN Regressor Results")
-        st.write(f"📉 MSE: {mean_squared_error(y_test, y_pred):.2f}")
-        st.write(f"📈 R² Score: {r2_score(y_test, y_pred):.2f}")
-        st.write(f"📊 MAE: {mean_absolute_error(y_test, y_pred):.2f}")
+            if knn_reg_clicked:
+                knn = KNeighborsRegressor(n_neighbors=5)
+                knn.fit(X_train, y_train)
+                y_pred = knn.predict(X_test)
+                st.success("✅ KNN Regressor Results")
+                st.write(f"📉 MSE: {mean_squared_error(y_test, y_pred):.2f}")
+                st.write(f"📈 R² Score: {r2_score(y_test, y_pred):.2f}")
+                st.write(f"📊 MAE: {mean_absolute_error(y_test, y_pred):.2f}")
 
-    if dt_reg_clicked:
-        dt = DecisionTreeRegressor(random_state=42)
-        dt.fit(X_train, y_train)
-        y_pred = dt.predict(X_test)
-        st.success("✅ Decision Tree Regressor Results")
-        st.write(f"📉 MSE: {mean_squared_error(y_test, y_pred):.2f}")
-        st.write(f"📈 R² Score: {r2_score(y_test, y_pred):.2f}")
-        st.write(f"📊 MAE: {mean_absolute_error(y_test, y_pred):.2f}")
+            if dt_reg_clicked:
+                dt = DecisionTreeRegressor(random_state=42)
+                dt.fit(X_train, y_train)
+                y_pred = dt.predict(X_test)
+                st.success("✅ Decision Tree Regressor Results")
+                st.write(f"📉 MSE: {mean_squared_error(y_test, y_pred):.2f}")
+                st.write(f"📈 R² Score: {r2_score(y_test, y_pred):.2f}")
+                st.write(f"📊 MAE: {mean_absolute_error(y_test, y_pred):.2f}")
 
-    if lr_clicked:
-        from sklearn.linear_model import LinearRegression
-        lr = LinearRegression()
-        lr.fit(X_train, y_train)
-        y_pred = lr.predict(X_test)
-        st.success("✅ Linear Regression Results")
-        st.write(f"📉 MSE: {mean_squared_error(y_test, y_pred):.2f}")
-        st.write(f"📈 R² Score: {r2_score(y_test, y_pred):.2f}")
-        st.write(f"📊 MAE: {mean_absolute_error(y_test, y_pred):.2f}")
+            if linreg_clicked:
+                lr = LinearRegression()
+                lr.fit(X_train, y_train)
+                y_pred = lr.predict(X_test)
+                st.success("✅ Linear Regression Results")
+                st.write(f"📉 MSE: {mean_squared_error(y_test, y_pred):.2f}")
+                st.write(f"📈 R² Score: {r2_score(y_test, y_pred):.2f}")
+                st.write(f"📊 MAE: {mean_absolute_error(y_test, y_pred):.2f}")
