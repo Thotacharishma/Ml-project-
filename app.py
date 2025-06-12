@@ -10,7 +10,7 @@ from sklearn.linear_model import LinearRegression
 
 
 st.set_page_config(page_title="ML Classifier or Regressor", layout="wide")
-st.title("🤖 Auto ML: Classification or Regression Model Trainer")
+st.title("🤖 1Auto ML: Classification or Regression Model Trainer")
 
 # Upload CSV
 uploaded_file = st.file_uploader("📁 Upload your dataset (CSV format)", type=["csv"])
