@@ -22,28 +22,26 @@ if uploaded_file is not None:
     target_col = st.selectbox("🎯 Select the target column", columns)
 
     if target_col:
-        # Encode categorical data
+        # Encode categorical features
         for col in df.select_dtypes(include='object').columns:
             df[col] = LabelEncoder().fit_transform(df[col])
 
         X = df.drop(target_col, axis=1)
         y = df[target_col]
 
-        # K value selection for KNN
-        #k_value = st.slider("🔢 Select value of K for KNN", 1, 20, 5)
-
         # Buttons to train
         col1, col2 = st.columns(2)
 
         with col1:
             if st.button("🚀 Train with KNN"):
-                 k_value = st.slider("🔢 Select value of K for KNN", 1, 20, 5)
+                # Show slider *inside* the button block
+                k_value = st.slider("🔢 Select value of K for KNN", 1, 20, 5)
                 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
                 knn = KNeighborsClassifier(n_neighbors=k_value)
                 knn.fit(X_train, y_train)
                 y_pred = knn.predict(X_test)
                 acc = accuracy_score(y_test, y_pred)
-                st.success(f"KNN Model Accuracy: {acc * 100:.2f}%")
+                st.success(f"KNN Model Accuracy (K={k_value}): {acc * 100:.2f}%")
 
         with col2:
             if st.button("🌳 Train with Decision Tree"):
