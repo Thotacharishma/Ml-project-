@@ -10,7 +10,7 @@ from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
 from sklearn.svm import SVC, SVR
 
 st.set_page_config(page_title="ML Classifier or Regressor", layout="wide")
-st.title("🤖1 Auto ML: Classification or Regression Model Trainer")
+st.title("🤖 Auto ML: Classification or Regression Model Trainer")
 
 # Upload CSV
 uploaded_file = st.file_uploader("📁 Upload your dataset (CSV format)", type=["csv"])
