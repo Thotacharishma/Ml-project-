@@ -8,7 +8,7 @@ from sklearn.metrics import accuracy_score, mean_squared_error, mean_absolute_er
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.linear_model import LogisticRegression
-from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier, AdaBoostClassifier, BaggingClassifier, ExtraTreesClassifier, VotingClassifier
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier, AdaBoostClassifier, BaggingClassifier, ExtraTreesClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis, QuadraticDiscriminantAnalysis
 from sklearn.neural_network import MLPClassifier
@@ -23,9 +23,13 @@ from sklearn.neural_network import MLPRegressor
 from sklearn.svm import SVR
 
 st.set_page_config(page_title="ML Classifier or Regressor", layout="wide")
-st.title("🤖 Auto ML1: Classification or Regression Model Trainer")
+st.title("🤖 Auto ML: Classification or Regression Model Trainer")
 
 uploaded_file = st.file_uploader("📁 Upload your dataset (CSV format)", type=["csv"])
+
+@st.cache_data
+def load_data(uploaded_file):
+    return pd.read_csv(uploaded_file)
 
 def detect_problem_type(df, target_col):
     unique_vals = df[target_col].nunique()
@@ -37,7 +41,7 @@ def detect_problem_type(df, target_col):
         return "regression"
 
 if uploaded_file:
-    df = pd.read_csv(uploaded_file)
+    df = load_data(uploaded_file)
     st.subheader("🔍 Data Preview")
     st.dataframe(df.head())
 
@@ -64,7 +68,7 @@ if uploaded_file:
             models = {
                 "KNN Classifier": KNeighborsClassifier(),
                 "Decision Tree Classifier": DecisionTreeClassifier(random_state=42),
-                "Logistic Regression": LogisticRegression(max_iter=1000),
+                "Logistic Regression": LogisticRegression(max_iter=500),
                 "Random Forest Classifier": RandomForestClassifier(),
                 "SVM Classifier": SVC(),
                 "Gradient Boosting Classifier": GradientBoostingClassifier(),
@@ -72,17 +76,18 @@ if uploaded_file:
                 "Naive Bayes": GaussianNB(),
                 "Linear Discriminant Analysis": LinearDiscriminantAnalysis(),
                 "Quadratic Discriminant Analysis": QuadraticDiscriminantAnalysis(),
-                "MLP Classifier": MLPClassifier(max_iter=1000),
+                "MLP Classifier": MLPClassifier(max_iter=300),
                 "Bagging Classifier": BaggingClassifier(),
                 "Extra Trees Classifier": ExtraTreesClassifier(),
             }
 
-            for name, model in models.items():
-                if st.button(f"📌 {name}"):
-                    model.fit(X_train, y_train)
-                    y_pred = model.predict(X_test)
-                    acc = accuracy_score(y_test, y_pred)
-                    st.success(f"✅ {name} Accuracy: {acc:.2f}")
+            selected_model = st.selectbox("Choose Classification Model", list(models.keys()))
+            if st.button("Train Selected Classification Model"):
+                model = models[selected_model]
+                model.fit(X_train, y_train)
+                y_pred = model.predict(X_test)
+                acc = accuracy_score(y_test, y_pred)
+                st.success(f"✅ {selected_model} Accuracy: {acc:.2f}")
 
         elif problem_type == "regression":
             models = {
@@ -97,16 +102,17 @@ if uploaded_file:
                 "Lasso Regression": Lasso(),
                 "ElasticNet Regression": ElasticNet(),
                 "Bayesian Ridge Regression": BayesianRidge(),
-                "MLP Regressor": MLPRegressor(max_iter=1000),
+                "MLP Regressor": MLPRegressor(max_iter=300),
                 "Bagging Regressor": BaggingRegressor(),
                 "Extra Trees Regressor": ExtraTreesRegressor(),
             }
 
-            for name, model in models.items():
-                if st.button(f"📌 {name}"):
-                    model.fit(X_train, y_train)
-                    y_pred = model.predict(X_test)
-                    st.success(f"✅ {name} Results")
-                    st.write(f"📉 MSE: {mean_squared_error(y_test, y_pred):.2f}")
-                    st.write(f"📈 R² Score: {r2_score(y_test, y_pred):.2f}")
-                    st.write(f"📊 MAE: {mean_absolute_error(y_test, y_pred):.2f}")
+            selected_model = st.selectbox("Choose Regression Model", list(models.keys()))
+            if st.button("Train Selected Regression Model"):
+                model = models[selected_model]
+                model.fit(X_train, y_train)
+                y_pred = model.predict(X_test)
+                st.success(f"✅ {selected_model} Results")
+                st.write(f"📉 MSE: {mean_squared_error(y_test, y_pred):.2f}")
+                st.write(f"📈 R² Score: {r2_score(y_test, y_pred):.2f}")
+                st.write(f"📊 MAE: {mean_absolute_error(y_test, y_pred):.2f}")
